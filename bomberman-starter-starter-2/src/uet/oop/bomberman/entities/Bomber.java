@@ -19,7 +19,6 @@ public class Bomber extends MoveEntity {
     }
 
     public void goUp() {
-        super.goUp();
         if(up == 0) {
             this.setImg(Sprite.player_up.getFxImage());
             up = 1;
@@ -30,10 +29,10 @@ public class Bomber extends MoveEntity {
             this.setImg(Sprite.player_up_2.getFxImage());
             up = 0;
         }
+        super.goUp();
     }
 
     public void goRight() {
-        super.goRight();
         if(right == 0) {
             this.setImg(Sprite.player_right_1.getFxImage());
             right = 1;
@@ -44,10 +43,10 @@ public class Bomber extends MoveEntity {
             this.setImg(Sprite.player_right.getFxImage());
             right = 0;
         }
+        super.goRight();
     }
 
     public void goDown() {
-        super.goDown();
         if(down == 0) {
             this.setImg(Sprite.player_down.getFxImage());
             down = 1;
@@ -58,10 +57,10 @@ public class Bomber extends MoveEntity {
             this.setImg(Sprite.player_down_2.getFxImage());
             down = 0;
         }
+        super.goDown();
     }
 
     public void goLeft() {
-        super.goLeft();
         if(left == 0) {
             this.setImg(Sprite.player_left.getFxImage());
             left = 1;
@@ -72,13 +71,10 @@ public class Bomber extends MoveEntity {
             this.setImg(Sprite.player_left_2.getFxImage());
             left = 0;
         }
-
+        super.goLeft();
     }
     @Override
     public void update() {
-        int index = BombermanGame.entities.size() - 1;
-        double x = BombermanGame.entities.get(index).getX();
-        double y = BombermanGame.entities.get(index).getY();
         if (keyCode == KeyCode.UP) {
             goUp();
         }
@@ -91,12 +87,6 @@ public class Bomber extends MoveEntity {
         else if(keyCode == KeyCode.RIGHT) {
             goRight();
         }
-        //gc.clearRect(x * Sprite.SCALED_SIZE,y * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,Sprite.SCALED_SIZE);
-        Entity object = new Grass(previous_x , previous_y, Sprite.grass.getFxImage());
-        object.render(BombermanGame.gc);
-        BombermanGame.entities.get(index).render(BombermanGame.gc);
-        //render();
     }
-
 
 }

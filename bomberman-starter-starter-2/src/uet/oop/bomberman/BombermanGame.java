@@ -68,27 +68,22 @@ public class BombermanGame extends Application {
             public void handle(long l) {
                 if (l - lastCall >= 2e8) {
                     update();
-                    render();
                     lastCall = l;
                 }
             }
         };
         timer.start();
 
-        createMap();
 
         Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         bomber.add(bomberman);
-
+        createMap();
+        render();
         scene.setOnKeyPressed(event -> {
             bomberman.keyCode = event.getCode();
             bomberman.update();
         });
 
-        /*Entity bomberman = new Bomber(1,1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
-        scene.setOnKeyPressed(event -> move_bomber(event));*/
-        //render();
     }
 
     public void createMap() {
@@ -103,13 +98,13 @@ public class BombermanGame extends Application {
                     map[i][j] = "*";
                     object = new Brick(j,i,Sprite.brick.getFxImage());
                 } else if(line.charAt(j) == '1') {
-                    map[i][j] = " ";
+                    map[i][j] = "1";
                     object = new Balloon(j,i,Sprite.balloom_left1.getFxImage());
                     entities.add(object);
                     object = new Grass (j, i, Sprite.grass.getFxImage());
                 } else if(line.charAt(j) == '2') {
-                    map[i][j] = " ";
-                    object = new Oneal(j,i, Sprite.oneal_left1.getFxImage());
+                    map[i][j] = "2";
+                    object = new Oneal(j,i, Sprite.oneal_left1.getFxImage(), bomber.get(0));
                     entities.add(object);
                     object = new Grass(j, i, Sprite.grass.getFxImage());
                 } else if (line.charAt(j) == 'x') {
@@ -144,26 +139,7 @@ public class BombermanGame extends Application {
         bomber.forEach(g -> g.render(gc));
     }
 
-    public void move_bomber(KeyEvent e) {
-        int index = entities.size() - 1;
-        double x = entities.get(index).getX();
-        double y = entities.get(index).getY();
-        if (e.getCode() == KeyCode.UP) {
-            entities.get(index).setY(y - 0.25);
-        }
-        else if(e.getCode() == KeyCode.DOWN) {
-            entities.get(index).setY(y + 0.25);
-        }
-        else if(e.getCode() == KeyCode.LEFT) {
-            entities.get(index).setX(x - 0.25);
-        }
-        else if(e.getCode() == KeyCode.RIGHT) {
-            entities.get(index).setX(x + 0.25);
-        }
-        //gc.clearRect(x * Sprite.SCALED_SIZE,y * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE,Sprite.SCALED_SIZE);
-        Entity object = new Grass(x , y, Sprite.grass.getFxImage());
-        object.render(gc);
-        entities.get(index).render(gc);
-        //render();
+    public List<Entity> getBomber() {
+        return bomber;
     }
 }

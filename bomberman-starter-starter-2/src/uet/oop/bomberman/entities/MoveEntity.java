@@ -6,7 +6,7 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class MoveEntity extends Entity {
-    public static final double speed = 0.5;
+    public static final double speed = 0.25;
     protected int up = 0;
     protected int down = 0;
     protected int left = 0;
@@ -72,6 +72,9 @@ public class MoveEntity extends Entity {
         if(!check) {
             getPrevious();
         }
+        Entity object = new Grass(previous_x , previous_y, Sprite.grass.getFxImage());
+        object.render(BombermanGame.gc);
+        render(BombermanGame.gc);
     }
     @Override
     public void update() {
