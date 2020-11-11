@@ -19,74 +19,44 @@ public class Bomber extends MoveEntity {
     }
 
     public void goUp() {
-        if(up == 0) {
-            this.setImg(Sprite.player_up.getFxImage());
-            up = 1;
-        } else if(up == 1) {
-            this.setImg(Sprite.player_up_1.getFxImage());
-            up = 2;
-        } else if(up == 2) {
-            this.setImg(Sprite.player_up_2.getFxImage());
-            up = 0;
-        }
         super.goUp();
     }
 
     public void goRight() {
-        if(right == 0) {
-            this.setImg(Sprite.player_right_1.getFxImage());
-            right = 1;
-        } else if(right == 1) {
-            this.setImg(Sprite.player_right_2.getFxImage());
-            right = 2;
-        } else if(right == 2) {
-            this.setImg(Sprite.player_right.getFxImage());
-            right = 0;
-        }
         super.goRight();
     }
 
     public void goDown() {
-        if(down == 0) {
-            this.setImg(Sprite.player_down.getFxImage());
-            down = 1;
-        } else if(down == 1) {
-            this.setImg(Sprite.player_down_1.getFxImage());
-            down = 2;
-        } else if(down == 2) {
-            this.setImg(Sprite.player_down_2.getFxImage());
-            down = 0;
-        }
         super.goDown();
     }
 
     public void goLeft() {
-        if(left == 0) {
-            this.setImg(Sprite.player_left.getFxImage());
-            left = 1;
-        } else if(left == 1) {
-            this.setImg(Sprite.player_left_1.getFxImage());
-            left = 2;
-        } else if(left == 2) {
-            this.setImg(Sprite.player_left_2.getFxImage());
-            left = 0;
-        }
         super.goLeft();
     }
     @Override
     public void update() {
         if (keyCode == KeyCode.UP) {
             goUp();
+            this.setImg(Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1,
+                        Sprite.player_up_2, animate, 20).getFxImage());
         }
         else if(keyCode == KeyCode.DOWN) {
             goDown();
+            this.setImg(Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1,
+                        Sprite.player_down_2, animate, 20).getFxImage());
         }
         else if(keyCode == KeyCode.LEFT) {
             goLeft();
+            this.setImg(Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1,
+                        Sprite.player_left_2, animate, 20).getFxImage());
         }
         else if(keyCode == KeyCode.RIGHT) {
             goRight();
+            this.setImg(Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1,
+                        Sprite.player_right_2, animate, 20).getFxImage());
         }
+
+        setAnimate();
     }
 
 }

@@ -5,12 +5,10 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
-public class MoveEntity extends Entity {
-    public static final double speed = 0.25;
-    protected int up = 0;
-    protected int down = 0;
-    protected int left = 0;
-    protected int right = 0;
+public abstract class MoveEntity extends Entity {
+    public static final double speed = 0.125;
+    protected int animate = 0;
+    protected int MAX_ANIMATE = 5500;
     protected double previous_x = 0;
     protected double previous_y = 0;
     public MoveEntity(double x, double y, Image img) {
@@ -79,5 +77,13 @@ public class MoveEntity extends Entity {
     @Override
     public void update() {
 
+    }
+
+    public void setAnimate() {
+        if (animate < MAX_ANIMATE) {
+            animate++;
+        } else {
+            animate = 0;
+        }
     }
 }

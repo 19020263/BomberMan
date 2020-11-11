@@ -1,19 +1,15 @@
 package uet.oop.bomberman;
 
-import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -28,10 +24,11 @@ public class BombermanGame extends Application {
     public static String[][] map;
     public static GraphicsContext gc;
     private Canvas canvas;
+
     public static List<Entity> entities = new ArrayList<>();
     public static List<Entity> bomber = new ArrayList<>();
     public static List<Entity> stillObjects = new ArrayList<>();
-    public static List<Entity> item = new ArrayList<>();    
+    public static List<Entity> item = new ArrayList<>();
 
 
     public static void main(String[] args) {

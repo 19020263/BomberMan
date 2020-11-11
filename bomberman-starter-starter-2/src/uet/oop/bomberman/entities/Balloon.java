@@ -14,22 +14,18 @@ public class Balloon extends MoveEntity {
 
     public void goLeft() {
         super.goLeft();
-        this.setImg(Sprite.balloom_left1.getFxImage());
     }
 
     public void goRight() {
         super.goRight();
-        this.setImg(Sprite.balloom_right1.getFxImage());
     }
 
     public void goUp() {
         super.goUp();
-        this.setImg(Sprite.balloom_right3.getFxImage());
     }
 
     public void goDown() {
         super.goDown();
-        this.setImg(Sprite.balloom_right3.getFxImage());
     }
 
     @Override
@@ -39,18 +35,28 @@ public class Balloon extends MoveEntity {
         switch (re) {
             case 0:
                 goRight();
+                this.setImg(Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
+                            Sprite.balloom_right3, animate, 10).getFxImage());
                 break;
             case 1:
                 goLeft();
+                this.setImg(Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2,
+                            Sprite.balloom_left3, animate, 10).getFxImage());
                 break;
             case 2:
                 goDown();
+                this.setImg(Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
+                            Sprite.balloom_right3, animate, 10).getFxImage());
                 break;
             case 3:
                 goUp();
+                this.setImg(Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2,
+                            Sprite.balloom_right3, animate, 10).getFxImage());
                 break;
             default:
                 break;
         }
+
+        setAnimate();
     }
 }
