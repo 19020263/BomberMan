@@ -37,7 +37,7 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws FileNotFoundException {
-        FileReader lev = new FileReader("Level1.txt");
+        FileReader lev = new FileReader("res/levels/Level1.txt");
         sc = new Scanner(lev);
         int level = sc.nextInt();
         HEIGHT = sc.nextInt();
@@ -60,13 +60,10 @@ public class BombermanGame extends Application {
         stage.setScene(scene);
         stage.show();
         AnimationTimer timer = new AnimationTimer() {
-            private long lastCall = 0;
             @Override
             public void handle(long l) {
-                if (l - lastCall >= 2e8) {
-                    update();
-                    lastCall = l;
-                }
+                render();
+                update();
             }
         };
         timer.start();

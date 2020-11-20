@@ -5,75 +5,59 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
-public abstract class MoveEntity extends Entity {
-    public static final double speed = 0.125;
-    protected int animate = 0;
-    protected int MAX_ANIMATE = 5500;
-    protected double previous_x = 0;
-    protected double previous_y = 0;
-    public MoveEntity(double x, double y, Image img) {
-        super(x,y,img);
-    }
+import java.awt.*;
+import java.util.List;
 
-    private void getPrevious() {
-        x = previous_x;
-        y = previous_y;
-    }
-    private void setPrevious() {
+public abstract class MoveEntity extends Entity {
+    protected int animate = 0;
+    protected int MAX_ANIMATE = 7500;
+    protected int previous_x;
+    protected int previous_y;
+    public MoveEntity(int x, int y, Image img) {
+        super(x,y,img);
         previous_x = x;
         previous_y = y;
     }
 
-    public void goUp() {
-        setPrevious();
-        y -= speed;
-        move();
+    public void goRight() {
+        previous_x = x;
+        previous_y = y;
+        if (checkMove()) {
+            x += speed;
+        }
+        reRender();
     }
 
     public void goLeft() {
-        setPrevious();
-        x -= speed;
-        move();
+        previous_x = x;
+        previous_y = y;
+        if (checkMove()) {
+            x -= speed;
+        }
+        reRender();
     }
 
-    public void goRight() {
-        setPrevious();
-        x += speed;
-        move();
-    }
 
-    public void goDown() {
-        setPrevious();
-        y += speed;
-        move();
-    }
-
-    public void move() {
-        int n = BombermanGame.stillObjects.size();
-        int m = Sprite.SCALED_SIZE;
-        boolean check = true;
-        for(int i = 0; i < n; i++) {
-            Entity g = BombermanGame.stillObjects.get(i);
-            double _x = x * m;
-            double _y = y * m;
-            double _gx = g.getX() * m;
-            double _gy = g.getY() * m;
-            if (((_x < _gx) && (_x + m > _gx)) || ((_gx <= _x) && (m + _gx > _x))) {
-                if (((_y < _gy) && (m + _y > _gy)) || ((_gy <= _y) && (m + _gy > _y))) {
-                    if(g.layer > layer){
-                        check = false;
-                        break;
-                    }
+    public boolean checkMove() {
+        boolean canMove = true;
+        Rectangle re = new Rectangle(previous_x, previous_y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        for (Entity entity : BombermanGame.stillObjects) {
+            if (entity instanceof Brick || entity instanceof Wall) {
+                if (re.intersects(entity.getBounds())) {
+                    canMove = false;
+                    break;
                 }
             }
         }
-        if(!check) {
-            getPrevious();
-        }
+        return canMove;
+    }
+
+    public void reRender() {
         Entity object = new Grass(previous_x , previous_y, Sprite.grass.getFxImage());
         object.render(BombermanGame.gc);
         render(BombermanGame.gc);
     }
+
     @Override
     public void update() {
 
