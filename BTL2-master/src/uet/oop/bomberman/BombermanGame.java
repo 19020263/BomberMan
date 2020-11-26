@@ -61,8 +61,6 @@ public class BombermanGame extends Application {
             public void handle(long l) {
                 render();
                 update();
-                if(!myBomber.isAlive())
-                    stage.close();
             }
         };
         timer.start();
@@ -138,6 +136,9 @@ public class BombermanGame extends Application {
                     }
                     if (r.charAt(j) == '2') {
                         enemies.add(new Oneal(j, i, Sprite.oneal_left1.getFxImage(), myBomber));
+                    }
+                    if (r.charAt(j) == '3') {
+                        enemies.add(new Kondoria(j, i, Sprite.kondoria_left1.getFxImage(), myBomber));
                     }
                     if (r.charAt(j) == 'b') {
                         stillObjects.add(new BombItem(j, i, Sprite.powerup_bombs.getFxImage()));

@@ -7,15 +7,15 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.awt.*;
 import java.util.Random;
 
-public class Oneal extends Enemy {
-    private int direction;
+public class Kondoria extends Enemy {
     protected Bomber bomber;
+    protected int direction;
     Random random = new Random();
 
-    public Oneal(int xUnit, int yUnit, Image img, Bomber bomber) {
+    public Kondoria(int xUnit, int yUnit, Image img, Bomber bomber) {
         super(xUnit, yUnit, img);
         this.bomber = bomber;
-        setLayer(1);
+        setLayer(4);
         setSpeed(1);
         generateDirection();
         alive = true;
@@ -23,22 +23,22 @@ public class Oneal extends Enemy {
 
     public void goLeft() {
         super.goLeft();
-        img = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2, Sprite.oneal_left3, left++, 18).getFxImage();
+        img = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2, Sprite.kondoria_left3, left++, 18).getFxImage();
     }
 
     public void goRight() {
         super.goRight();
-        img = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2, Sprite.oneal_right3, right++, 18).getFxImage();
+        img = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_right2, Sprite.kondoria_right3, right++, 18).getFxImage();
     }
 
     public void goUp() {
         super.goUp();
-        img = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2, Sprite.oneal_left3, up++, 18).getFxImage();
+        img = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2, Sprite.kondoria_left3, up++, 18).getFxImage();
     }
 
     public void goDown() {
         super.goDown();
-        img = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2, Sprite.oneal_right3, down++, 18).getFxImage();
+        img = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_right2, Sprite.kondoria_right3, down++, 18).getFxImage();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Oneal extends Enemy {
 
     @Override
     public void update() {
-        if(isAlive()){
+        if(isAlive()) {
             generateDirection();
             if (direction == 0) goLeft();
             if (direction == 1) goRight();
@@ -56,24 +56,18 @@ public class Oneal extends Enemy {
             if (direction == 3) goDown();
         }else if(animated < 30){
             animated++;
-            img = Sprite.oneal_dead.getFxImage();
+            img = Sprite.kondoria_dead.getFxImage();
         }else
             BombermanGame.enemies.remove(this);
     }
 
     public void generateDirection() {
-        Rectangle re = bomber.getBounds();
-        Rectangle onealRadius = new Rectangle(x - 60, y - 60, 60 * 2, 60 * 2);
-        if(!onealRadius.intersects(re)) {
-            direction = random.nextInt(4);
-        }
-        setSpeed(2);
         int vertical = random.nextInt(2);
 
         if(vertical == 1) {
             int v = calculateRowDirection();
             if(v != -1)
-                direction =  v;
+                direction = v;
             else
                 direction = calculateColDirection();
 
@@ -81,7 +75,7 @@ public class Oneal extends Enemy {
             int h = calculateColDirection();
 
             if(h != -1)
-                direction =  h;
+                direction = h;
             else
                 direction = calculateRowDirection();
         }
