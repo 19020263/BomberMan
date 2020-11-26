@@ -49,7 +49,9 @@ public class Kondoria extends Enemy {
     @Override
     public void update() {
         if(isAlive()) {
-            generateDirection();
+            if(x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
+                generateDirection();
+            }
             if (direction == 0) goLeft();
             if (direction == 1) goRight();
             if (direction == 2) goUp();

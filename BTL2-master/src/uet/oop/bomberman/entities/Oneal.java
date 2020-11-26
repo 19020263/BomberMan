@@ -11,6 +11,8 @@ public class Oneal extends Enemy {
     private int direction;
     protected Bomber bomber;
     Random random = new Random();
+    Rectangle onealRadius = new Rectangle(x - Sprite.SCALED_SIZE * 10, y - Sprite.SCALED_SIZE * 10,
+            Sprite.SCALED_SIZE * 10 * 2, Sprite.SCALED_SIZE * 10 * 2);
 
     public Oneal(int xUnit, int yUnit, Image img, Bomber bomber) {
         super(xUnit, yUnit, img);
@@ -48,58 +50,60 @@ public class Oneal extends Enemy {
 
     @Override
     public void update() {
-        if(isAlive()){
-            generateDirection();
+        if (isAlive()) {
+            if (x % 32 == 0 && y % 32 == 0) {
+                generateDirection();
+            }
             if (direction == 0) goLeft();
             if (direction == 1) goRight();
             if (direction == 2) goUp();
             if (direction == 3) goDown();
-        }else if(animated < 30){
+        } else if (animated < 30) {
             animated++;
             img = Sprite.oneal_dead.getFxImage();
-        }else
+        } else
             BombermanGame.enemies.remove(this);
     }
 
     public void generateDirection() {
         Rectangle re = bomber.getBounds();
-        Rectangle onealRadius = new Rectangle(x - 60, y - 60, 60 * 2, 60 * 2);
-        if(!onealRadius.intersects(re)) {
-            direction = random.nextInt(4);
-        }
-        setSpeed(2);
-        int vertical = random.nextInt(2);
+        if (onealRadius.intersects(re)) {
+            setSpeed(2);
+            int vertical = random.nextInt(2);
 
-        if(vertical == 1) {
-            int v = calculateRowDirection();
-            if(v != -1)
-                direction =  v;
-            else
-                direction = calculateColDirection();
+            if (vertical == 1) {
+                int v = calculateRowDirection();
+                if (v != -1)
+                    direction = v;
+                else
+                    direction = calculateColDirection();
 
+            } else {
+                int h = calculateColDirection();
+
+                if (h != -1)
+                    direction = h;
+                else
+                    direction = calculateRowDirection();
+            }
         } else {
-            int h = calculateColDirection();
-
-            if(h != -1)
-                direction =  h;
-            else
-                direction = calculateRowDirection();
+            direction = random.nextInt(4);
         }
     }
 
     private int calculateColDirection() {
-        if(bomber.x / Sprite.SCALED_SIZE < x / Sprite.SCALED_SIZE)
+        if (bomber.x / Sprite.SCALED_SIZE < x / Sprite.SCALED_SIZE)
             return 0;
-        else if(bomber.x / Sprite.SCALED_SIZE > x / Sprite.SCALED_SIZE)
+        else if (bomber.x / Sprite.SCALED_SIZE > x / Sprite.SCALED_SIZE)
             return 1;
 
         return -1;
     }
 
     private int calculateRowDirection() {
-        if(bomber.y / Sprite.SCALED_SIZE < y / Sprite.SCALED_SIZE)
+        if (bomber.y / Sprite.SCALED_SIZE < y / Sprite.SCALED_SIZE)
             return 2;
-        else if(bomber.y / Sprite.SCALED_SIZE > y / Sprite.SCALED_SIZE)
+        else if (bomber.y / Sprite.SCALED_SIZE > y / Sprite.SCALED_SIZE)
             return 3;
         return -1;
     }
