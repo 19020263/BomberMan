@@ -8,6 +8,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Balloon;
+import uet.oop.bomberman.entities.Enemy;
+import uet.oop.bomberman.entities.Kondoria;
+import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
@@ -139,6 +143,9 @@ public class BombermanGame extends Application {
                     }
                     if (r.charAt(j) == '3') {
                         enemies.add(new Kondoria(j, i, Sprite.kondoria_left1.getFxImage(), myBomber));
+                    }
+                    if (r.charAt(j) == '4') {
+                        enemies.add(new Minvo(j, i, Sprite.minvo_left1.getFxImage(), myBomber));
                     }
                     if (r.charAt(j) == 'b') {
                         stillObjects.add(new BombItem(j, i, Sprite.powerup_bombs.getFxImage()));

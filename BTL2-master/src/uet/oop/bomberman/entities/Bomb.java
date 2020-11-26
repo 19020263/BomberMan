@@ -40,4 +40,9 @@ public class Bomb extends MovingEntity {
         }
         return r1.intersects(r2);
     }
+
+    @Override
+    public Rectangle getBounds() {
+        return super.getBounds();
+    }
 }

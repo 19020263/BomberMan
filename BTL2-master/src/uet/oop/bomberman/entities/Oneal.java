@@ -11,8 +11,8 @@ public class Oneal extends Enemy {
     private int direction;
     protected Bomber bomber;
     Random random = new Random();
-    Rectangle onealRadius = new Rectangle(x - Sprite.SCALED_SIZE * 10, y - Sprite.SCALED_SIZE * 10,
-            Sprite.SCALED_SIZE * 10 * 2, Sprite.SCALED_SIZE * 10 * 2);
+    Rectangle onealRadius = new Rectangle(x - Sprite.SCALED_SIZE * 8, y - Sprite.SCALED_SIZE * 8,
+            Sprite.SCALED_SIZE * 8 * 2, Sprite.SCALED_SIZE * 8 * 2);
 
     public Oneal(int xUnit, int yUnit, Image img, Bomber bomber) {
         super(xUnit, yUnit, img);
@@ -92,18 +92,18 @@ public class Oneal extends Enemy {
     }
 
     private int calculateColDirection() {
-        if (bomber.x / Sprite.SCALED_SIZE < x / Sprite.SCALED_SIZE)
+        if (bomber.x < x)
             return 0;
-        else if (bomber.x / Sprite.SCALED_SIZE > x / Sprite.SCALED_SIZE)
+        else if (bomber.x > x)
             return 1;
 
         return -1;
     }
 
     private int calculateRowDirection() {
-        if (bomber.y / Sprite.SCALED_SIZE < y / Sprite.SCALED_SIZE)
+        if (bomber.y < y)
             return 2;
-        else if (bomber.y / Sprite.SCALED_SIZE > y / Sprite.SCALED_SIZE)
+        else if (bomber.y > y)
             return 3;
         return -1;
     }

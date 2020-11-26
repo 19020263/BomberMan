@@ -17,6 +17,7 @@ public abstract class MovingEntity extends Entity {
     public MovingEntity(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
         alive = true;
+
     }
 
     public void setSpeed(int speed) {
