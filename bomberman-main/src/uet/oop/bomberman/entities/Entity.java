@@ -14,9 +14,10 @@ public abstract class Entity {
     protected int y;
 
     protected Image img;
-    protected int animated = 0;
+
     protected int layer;
-    protected boolean alive;
+
+    protected int animated = 0;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {
@@ -25,10 +26,6 @@ public abstract class Entity {
         this.img = img;
     }
 
-    public Entity(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
@@ -51,19 +48,7 @@ public abstract class Entity {
         this.layer = layer;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    public void setImg(Image img) {
-        this.img = img;
-    }
-
     public Rectangle getBounds() {
         return new Rectangle(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-    }
-
-    public boolean isAlive() {
-        return alive;
     }
 }

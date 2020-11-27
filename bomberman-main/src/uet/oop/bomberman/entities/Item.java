@@ -7,4 +7,6 @@ public abstract class Item extends StillEntity {
         super(xUnit, yUnit, img);
         setLayer(1);
     }
+
+    public abstract void powerUp(Bomber bomber);
 }

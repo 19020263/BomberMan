@@ -2,7 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.media.Media;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
@@ -22,13 +22,12 @@ public class Bomber extends MovingEntity {
         super( x, y, img);
         setLayer(1);
         setSpeed(2);
-        setBombRemain(1);
-        setPower(1);
+        setBombRemain(2);
+        setPower(2);
     }
 
     @Override
     public void update() {
-
         if (direction == KeyCode.LEFT) {
             goLeft();
             Sound.di_chuyen1.play();
@@ -41,28 +40,29 @@ public class Bomber extends MovingEntity {
         }
         if (direction == KeyCode.UP) {
             goUp();
-            Sound.di_chuyen2.play();
-            Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
+            Sound.di_chuyen1.play();
+            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
         }
         if (direction == KeyCode.DOWN) {
             goDown();
-            Sound.di_chuyen2.play();
-            Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
+            Sound.di_chuyen1.play();
+            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
         }
         if (placeBombCommand) {
             placeBomb();
         }
         for (int i = 0; i < bombs.size(); i++) {
             Bomb bomb = bombs.get(i);
-            if (bomb.exploded) {
-                bombs.remove(bomb);
+            if (bomb.isExploded()) {
+                bombs.remove(i--);
                 bombRemain++;
+                Sound.bomb_explo.play();
+                Sound.bomb_explo.seek(Sound.bomb_explo.getStartTime());
             }
         }
     }
 
     public void handleKeyPressedEvent(KeyCode keyCode) {
-
         if (keyCode == KeyCode.LEFT || keyCode == KeyCode.RIGHT
                 || keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
             this.direction = keyCode;
@@ -119,12 +119,14 @@ public class Bomber extends MovingEntity {
     
     public void placeBomb() {
         if (bombRemain > 0) {
-            int xB = (int) Math.round((x + 4) / (double) Sprite.SCALED_SIZE);
+            int xB = (int) Math.round((x) / (double) Sprite.SCALED_SIZE);
             int yB = (int) Math.round((y + 4) / (double) Sprite.SCALED_SIZE);
             for (Bomb bomb : bombs) {
                 if (xB * Sprite.SCALED_SIZE == bomb.getX() && yB * Sprite.SCALED_SIZE == bomb.getY()) return;
             }
-            bombs.add(new Bomb(xB, yB, Sprite.bomb.getFxImage()));
+            Bomb bomb = new Bomb(xB, yB, Sprite.bomb.getFxImage());
+            bomb.setPower(power);
+            bombs.add(bomb);
             bombRemain--;
         }
     }
@@ -155,11 +157,21 @@ public class Bomber extends MovingEntity {
     }
 
     public void setPower(int power) {
+        Sound.get_item.play();
+        Sound.get_item.seek(Sound.get_item.getStartTime());
         this.power = power;
     }
 
+    public Rectangle getDesBounds() {
+        return new Rectangle(desX, desY + 8, Sprite.SCALED_SIZE * 3 / 4, Sprite.SCALED_SIZE * 3 / 4);
+    }
+
     public Rectangle getBounds() {
-        return new Rectangle(desX + 4, desY + 4, Sprite.SCALED_SIZE - 12, Sprite.SCALED_SIZE * 3 / 4);
+        return new Rectangle(x, y + 8, Sprite.SCALED_SIZE * 3 / 4, Sprite.SCALED_SIZE * 3 / 4);
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
     }
 
 }

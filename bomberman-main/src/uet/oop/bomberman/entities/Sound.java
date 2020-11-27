@@ -17,7 +17,7 @@ public class Sound {
     public static MediaPlayer di_chuyen1 = new MediaPlayer(media1);
     public static MediaPlayer di_chuyen2 = new MediaPlayer(media2);
     public static MediaPlayer dat_bom = new MediaPlayer(media3);
-    public static MediaPlayer mediaPlayer4 = new MediaPlayer(media4);
+    public static MediaPlayer get_item = new MediaPlayer(media4);
     public static MediaPlayer chet = new MediaPlayer(media5);
     public static MediaPlayer chuyen_man = new MediaPlayer(media6);
     public static MediaPlayer stage_theme = new MediaPlayer(media7);

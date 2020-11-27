@@ -9,6 +9,7 @@ public abstract class MovingEntity extends Entity {
     protected int desX = x;
     protected int desY = y;
     protected int speed;
+    protected boolean alive;
     protected int left = 0;
     protected int right = 0;
     protected int up = 0;
@@ -17,6 +18,10 @@ public abstract class MovingEntity extends Entity {
     public MovingEntity(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
         alive = true;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     public void setSpeed(int speed) {
@@ -48,9 +53,11 @@ public abstract class MovingEntity extends Entity {
         desY = y;
     }
 
-    public Rectangle getBounds() {
+    public Rectangle getDesBounds() {
         return new Rectangle(desX, desY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
     }
 
-
+    public boolean isAlive() {
+        return alive;
+    }
 }

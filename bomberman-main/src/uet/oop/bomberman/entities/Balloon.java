@@ -14,21 +14,21 @@ public class Balloon extends Enemy {
         setLayer(1);
         setSpeed(1);
         generateDirection();
-        alive = true;
     }
 
     @Override
     public void update() {
-        if(isAlive()) {
+        if (isAlive()) {
             if (direction == 0) goLeft();
             if (direction == 1) goRight();
             if (direction == 2) goUp();
             if (direction == 3) goDown();
-        }else if(animated < 30){
+        } else if (animated < 30) {
             animated++;
             img = Sprite.balloom_dead.getFxImage();
-        }else
+        } else {
             BombermanGame.enemies.remove(this);
+        }
     }
 
     public void goLeft() {

@@ -8,6 +8,11 @@ public class BombItem extends Item {
     }
 
     @Override
+    public void powerUp(Bomber bomber) {
+        bomber.setBombRemain(bomber.getBombRemain() + 1);
+    }
+
+    @Override
     public void update() {
 
     }

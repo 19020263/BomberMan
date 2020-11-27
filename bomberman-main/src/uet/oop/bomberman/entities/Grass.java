@@ -2,11 +2,11 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 
-public class Wall extends Entity {
+public class Grass extends StillEntity {
 
-    public Wall(int x, int y, Image img) {
+    public Grass(int x, int y, Image img) {
         super(x, y, img);
-        setLayer(4);
+        setLayer(0);
     }
 
     @Override

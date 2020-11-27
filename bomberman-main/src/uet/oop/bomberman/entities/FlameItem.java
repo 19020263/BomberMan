@@ -8,6 +8,11 @@ public class FlameItem extends Item {
     }
 
     @Override
+    public void powerUp(Bomber bomber) {
+        bomber.setPower(bomber.getPower() + 1);
+    }
+
+    @Override
     public void update() {
 
     }

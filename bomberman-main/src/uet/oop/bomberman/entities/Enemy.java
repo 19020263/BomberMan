@@ -7,4 +7,8 @@ public abstract class Enemy extends MovingEntity {
         super(xUnit, yUnit, img);
         setLayer(1);
     }
+
+    public void die() {
+        alive = false;
+    }
 }
