@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public class Bomber extends MovingEntity {
         super( x, y, img);
         setLayer(1);
         setSpeed(2);
-        setBombRemain(2);
+        setBombRemain(1);
         setPower(1);
     }
 
@@ -30,22 +31,30 @@ public class Bomber extends MovingEntity {
 
         if (direction == KeyCode.LEFT) {
             goLeft();
+            Sound.di_chuyen1.play();
+            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
         }
         if (direction == KeyCode.RIGHT) {
             goRight();
+            Sound.di_chuyen1.play();
+            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
         }
         if (direction == KeyCode.UP) {
             goUp();
+            Sound.di_chuyen2.play();
+            Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
         }
         if (direction == KeyCode.DOWN) {
             goDown();
+            Sound.di_chuyen2.play();
+            Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
         }
         if (placeBombCommand) {
             placeBomb();
         }
         for (int i = 0; i < bombs.size(); i++) {
             Bomb bomb = bombs.get(i);
-            if (!bomb.isAlive()) {
+            if (bomb.exploded) {
                 bombs.remove(bomb);
                 bombRemain++;
             }
@@ -59,6 +68,10 @@ public class Bomber extends MovingEntity {
             this.direction = keyCode;
         }
         if (keyCode == KeyCode.SPACE) {
+            if(bombRemain > 0) {
+                Sound.dat_bom.play();
+                Sound.dat_bom.seek(Sound.dat_bom.getStartTime());
+            }
             placeBombCommand = true;
         }
     }
@@ -132,6 +145,8 @@ public class Bomber extends MovingEntity {
     }
 
     public void die() {
+        Sound.chet.play();
+        Sound.chet.seek(Sound.chet.getStartTime());
         alive = false;
     }
 
@@ -146,4 +161,5 @@ public class Bomber extends MovingEntity {
     public Rectangle getBounds() {
         return new Rectangle(desX + 4, desY + 4, Sprite.SCALED_SIZE - 12, Sprite.SCALED_SIZE * 3 / 4);
     }
+
 }

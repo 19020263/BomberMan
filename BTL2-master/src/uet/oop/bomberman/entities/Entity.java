@@ -17,7 +17,6 @@ public abstract class Entity {
     protected int animated = 0;
     protected int layer;
     protected boolean alive;
-    protected boolean moving;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {
@@ -54,6 +53,10 @@ public abstract class Entity {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
     }
 
     public Rectangle getBounds() {

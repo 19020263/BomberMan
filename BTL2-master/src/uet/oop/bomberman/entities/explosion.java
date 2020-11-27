@@ -11,7 +11,7 @@ public class explosion extends Entity {
     private int right;
     private int top;
     private int down;
-    private int power = 1;
+    private static int power = 1;
     private int size = Sprite.SCALED_SIZE;
     private int direction;
     private int time = 0;
@@ -47,8 +47,6 @@ public class explosion extends Entity {
     }
 
     private void creat_explosion(){
-        BombermanGame.explosionList.add(new explosion(x, y, Sprite.explosion_horizontal.getFxImage(),1));
-        BombermanGame.explosionList.add(new explosion(x, y, Sprite.explosion_vertical.getFxImage(),4));
         for(int i = 0; i < right; i++){
             explosion e = new explosion(x + size*(i + 1), y);
             if(i == right - 1) {

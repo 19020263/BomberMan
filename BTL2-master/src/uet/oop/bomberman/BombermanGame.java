@@ -6,15 +6,14 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.Balloon;
-import uet.oop.bomberman.entities.Enemy;
-import uet.oop.bomberman.entities.Kondoria;
-import uet.oop.bomberman.entities.Oneal;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ public class BombermanGame extends Application {
     public static final List<Entity> stillObjects = new ArrayList<>();
     public static final List<explosion> explosionList = new ArrayList<>();
     private Bomber myBomber;
+    private String path = "res/sound/Bomberman SFX4.wav";
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -58,24 +58,55 @@ public class BombermanGame extends Application {
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
+        Media media = new Media(new File(path).toURI().toString()) ;
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
 
+        Sound.stage_theme.play();
+        Sound.stage_theme.seek(Sound.stage_theme.getStartTime());
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 render();
                 update();
+                if(checkNextMap() && level < 5){
+                    nextMap();
+                }
             }
         };
         timer.start();
-
         //myBomber = new Bomber(11, 1, Sprite.player_right.getFxImage());
 
         scene.setOnKeyPressed(event -> myBomber.handleKeyPressedEvent(event.getCode()));
         scene.setOnKeyReleased(event -> myBomber.handleKeyReleasedEvent(event.getCode()));
     }
 
+    private void nextMap(){
+        level++;
+        Sound.chuyen_man.play();
+        Sound.chuyen_man.seek(Sound.chuyen_man.getStartTime());
+        stillObjects.clear();
+        explosionList.clear();
+        load();
+    }
+    private boolean checkNextMap(){
+        if(enemies.size() == 0){
+            Rectangle r1 = myBomber.getBounds();
+            int m = stillObjects.size();
+            for (int i = 0; i < m; i++){
+                if(stillObjects.get(i) instanceof Portal){
+                    Rectangle r2 = stillObjects.get(i).getBounds();
+                    if(r1.intersects(r2))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void update() {
+
         for(int i = 0; i < enemies.size(); i++)
             enemies.get(i).update();
         for (int i = 0; i < explosionList.size(); i++)
