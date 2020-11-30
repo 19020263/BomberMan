@@ -90,24 +90,25 @@ public class Bomber extends MovingEntity {
 
     public void handleKeyReleasedEvent(KeyCode keyCode) {
         if(isAlive()) {
-            if (direction == keyCode) {
-                if (direction == KeyCode.LEFT) {
-                    img = Sprite.player_left.getFxImage();
+            if (isAlive()) {
+                if (direction == keyCode) {
+                    if (direction == KeyCode.LEFT) {
+                        img = Sprite.player_left.getFxImage();
+                    }
+                    if (direction == KeyCode.RIGHT) {
+                        img = Sprite.player_right.getFxImage();
+                    }
+                    if (direction == KeyCode.UP) {
+                        img = Sprite.player_up.getFxImage();
+                    }
+                    if (direction == KeyCode.DOWN) {
+                        img = Sprite.player_down.getFxImage();
+                    }
+                    direction = null;
                 }
-                if (direction == KeyCode.RIGHT) {
-                    img = Sprite.player_right.getFxImage();
+                if (keyCode == KeyCode.SPACE) {
+                    placeBombCommand = false;
                 }
-                if (direction == KeyCode.UP) {
-                    System.out.println("yes");
-                    img = Sprite.player_up.getFxImage();
-                }
-                if (direction == KeyCode.DOWN) {
-                    img = Sprite.player_down.getFxImage();
-                }
-                direction = null;
-            }
-            if (keyCode == KeyCode.SPACE) {
-                placeBombCommand = false;
             }
         }
     }
@@ -161,6 +162,10 @@ public class Bomber extends MovingEntity {
         return alive;
     }
 
+    public void clear_bom(){
+        this.bombs.clear();
+    }
+
     public boolean isDeath(){
         return death;
     }
@@ -178,8 +183,12 @@ public class Bomber extends MovingEntity {
         Sound.get_item.play();
         Sound.get_item.seek(Sound.get_item.getStartTime());
         this.power = power;
+        direction = null;
     }
 
+    public void setDirection(KeyCode keyCode){
+        this.direction = keyCode;
+    }
     public Rectangle getDesBounds() {
         return new Rectangle(desX, desY + 8, Sprite.SCALED_SIZE * 3 / 4, Sprite.SCALED_SIZE * 3 / 4);
     }

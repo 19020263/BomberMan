@@ -26,6 +26,7 @@ public class BombermanGame extends Application {
 
     public static int WIDTH = 20;
     public static int HEIGHT = 15;
+    public final static int MaxLevel = 5;
     public static int level = 1;
     private boolean newMap = true;
     private int time = 0;
@@ -40,7 +41,7 @@ public class BombermanGame extends Application {
 
     public static final List<Enemy> enemies = new ArrayList<>();
     private final List<StillEntity> stillObjects = new ArrayList<>();
-    private Bomber myBomber;
+    private Bomber myBomber = new Bomber(0 , 0, Sprite.player_right.getFxImage());
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -72,19 +73,19 @@ public class BombermanGame extends Application {
                         if (time < 120) {
                             time++;
                         } else {
+                            myBomber.setDirection(null);
                             stage.setScene(load());
                             newMap = false;
                         }
                     } else {
                         render();
                         update();
-                        keyHandel(stage, myBomber);
                         if (end_game(stage))
                             mouseHandel(stage);
-                        if (checkNextMap() && level < 5) {
+                        if (checkNextMap() && level < MaxLevel) {
                             nextMap();
                         }
-
+                        keyHandel(stage, myBomber);
                     }
                 }
             }
@@ -123,9 +124,8 @@ public class BombermanGame extends Application {
                 reload = false;
                 return true;
             }
-
         }
-        if(enemies.size() == 0 && level == 5 && myBomber.isAlive()){
+        if(checkNextMap() && level == MaxLevel){
             if(reload){
                 stage.setScene(lose_win("YOU WIN"));
                 reload = false;
@@ -137,25 +137,21 @@ public class BombermanGame extends Application {
     }
 
     private Scene lose_win(String str){
-        int w = WIDTH * Sprite.SCALED_SIZE;
-        int h = HEIGHT * Sprite.SCALED_SIZE;
         BackgroundFill backgroundFill = new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
-        Label lb = label(str, (w - 120) / 2, (h - 100) / 2, 30);
-        exits = label("EXIT", w / 2 + 90, h / 2 + 15, 20);
-        play_again = label("PLAY AGAIN", w / 2 - 110, h / 2 + 15, 20);
+        Label lb = label(str, 436, 158, 30);
+        exits = label("EXIT", 586, 223, 20);
+        play_again = label("PLAY AGAIN", 386, 223, 20);
         AnchorPane anchorPane = new AnchorPane(lb, exits, play_again);
         anchorPane.setBackground(background);
-        return new Scene(anchorPane,w, h);
+        return new Scene(anchorPane,992, 416);
     }
 
     private void mouseHandel(Stage stage){
         exits.setOnMouseClicked(event -> {
-            System.out.println("e");
             stage.close();
         });
         play_again.setOnMouseClicked(event -> {
-            System.out.println("pa");
             level = 1;
             newMap = true;
             stillObjects.clear();
@@ -176,7 +172,7 @@ public class BombermanGame extends Application {
         newMap = true;
         time = 0;
         Sound.chuyen_man.play();
-        Sound.chuyen_man.seek(Sound.chuyen_man.getStartTime());
+        myBomber.clear_bom();
         stillObjects.clear();
         loadMap();
     }
@@ -184,16 +180,10 @@ public class BombermanGame extends Application {
     private Scene message(){
         BackgroundFill backgroundFill = new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
-        Label lb = label("LEVEL " + level, (WIDTH * Sprite.SCALED_SIZE - 70) / 2,
-                (HEIGHT * Sprite.SCALED_SIZE - 70) / 2, 30);
-        /*label.setFont(new Font("System", 30));
-        label.setAlignment(Pos.CENTER);
-        label.setTextFill(Color.WHITE);
-        label.setLayoutX();
-        label.setLayoutY();*/
+        Label lb = label("LEVEL " + level, 461, 173, 30);
         AnchorPane anchorPane = new AnchorPane(lb);
         anchorPane.setBackground(background);
-        return new Scene(anchorPane,WIDTH * Sprite.SCALED_SIZE, HEIGHT * Sprite.SCALED_SIZE);
+        return new Scene(anchorPane,992, 416);
     }
 
     private Scene load(){
@@ -284,6 +274,11 @@ public class BombermanGame extends Application {
                         stillObjects.add(new Brick(x, y, Sprite.brick.getFxImage()));
                     }
                     if (r.charAt(x) == 'p') {
+                        if(myBomber != null) {
+                            myBomber.setX(x);
+                            myBomber.setY(y);
+                            myBomber.setImg(Sprite.player_right.getFxImage());
+                        }
                         myBomber = new Bomber(x, y, Sprite.player_right.getFxImage());
                     }
                     if (r.charAt(x) == '1') {
