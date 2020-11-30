@@ -2,38 +2,45 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 import java.util.List;
-import java.util.jar.Manifest;
 
 public class BombermanGame extends Application {
 
     public static int WIDTH = 20;
     public static int HEIGHT = 15;
     public static int level = 1;
-
+    private boolean newMap = true;
+    private int time = 0;
+    private Label exits;
+    private Label play_again;
+    private Label play;
     private GraphicsContext gc;
     private Canvas canvas;
     private Scanner scanner;
+    boolean reload = true;
+    boolean run = false;
 
     public static final List<Enemy> enemies = new ArrayList<>();
     private final List<StillEntity> stillObjects = new ArrayList<>();
     private Bomber myBomber;
-    private String path = "res/sound/Bomberman SFX4.wav";
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -41,56 +48,165 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-        load();
-        // Tao Canvas
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-
-        // Tao root container
-        Group root = new Group();
-        root.getChildren().add(canvas);
-
-        // Tao scene
-        Scene scene = new Scene(root);
-
-        // Them scene vao stage
-        stage.setScene(scene);
-        stage.show();
-
-        Media media = new Media(new File(path).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setAutoPlay(true);
-
         Sound.stage_theme.play();
-        Sound.stage_theme.seek(Sound.stage_theme.getStartTime());
+        Sound.stage_theme.setAutoPlay(true);
+        Sound.stage_theme.setCycleCount(99999);
 
+        stage.setScene(start_game());
+        exits.setOnMouseClicked(event -> {
+            stage.close();
+        });
+        play.setOnMouseClicked(event -> {
+            run = true;
+            loadMap();
+        });
         AnimationTimer timer = new AnimationTimer() {
+
             @Override
             public void handle(long l) {
-                render();
-                update();
-                if (checkNextMap() && level < 5) {
-                    nextMap();
-                }
-                if (!myBomber.isAlive()) {
-                    myBomber.setImg(Sprite.player_dead1.getFxImage());
+                if (run) {
+                    if (newMap) {
+                        if (time == 0) {
+                            stage.setScene(message());
+                        }
+                        if (time < 120) {
+                            time++;
+                        } else {
+                            stage.setScene(load());
+                            newMap = false;
+                        }
+                    } else {
+                        render();
+                        update();
+                        keyHandel(stage, myBomber);
+                        if (end_game(stage))
+                            mouseHandel(stage);
+                        if (checkNextMap() && level < 5) {
+                            nextMap();
+                        }
+
+                    }
                 }
             }
         };
         timer.start();
+        stage.show();
+    }
 
-        scene.setOnKeyPressed(event -> myBomber.handleKeyPressedEvent(event.getCode()));
-        scene.setOnKeyReleased(event -> myBomber.handleKeyReleasedEvent(event.getCode()));
+    private Scene start_game()  {
+
+        BackgroundFill backgroundFill = new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        Label lb = label("BOMBERMAN GAME",110, 100,60);
+        lb.setTextFill(Color.ORANGE);
+        play = label("PLAY", 350,180,30);
+        exits = label("EXIT", 350,220,30);
+        AnchorPane ap = new AnchorPane(lb,play,exits);
+        ap.setBackground(background);
+        return new Scene(ap,800,400);
+
+    }
+    private Label label(String str, double x, double y, double size){
+        Label l = new Label(str);
+        l.setLayoutX(x);
+        l.setLayoutY(y);
+        l.setTextFill(Color.WHITE);
+        l.setAlignment(Pos.CENTER);
+        l.setFont(new Font(size));
+        return l;
+    }
+
+    private boolean end_game(Stage stage){
+        if(myBomber.isDeath()){
+            if(reload) {
+                stage.setScene(lose_win("GAME OVER"));
+                reload = false;
+                return true;
+            }
+
+        }
+        if(enemies.size() == 0 && level == 5 && myBomber.isAlive()){
+            if(reload){
+                stage.setScene(lose_win("YOU WIN"));
+                reload = false;
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private Scene lose_win(String str){
+        int w = WIDTH * Sprite.SCALED_SIZE;
+        int h = HEIGHT * Sprite.SCALED_SIZE;
+        BackgroundFill backgroundFill = new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        Label lb = label(str, (w - 120) / 2, (h - 100) / 2, 30);
+        exits = label("EXIT", w / 2 + 90, h / 2 + 15, 20);
+        play_again = label("PLAY AGAIN", w / 2 - 110, h / 2 + 15, 20);
+        AnchorPane anchorPane = new AnchorPane(lb, exits, play_again);
+        anchorPane.setBackground(background);
+        return new Scene(anchorPane,w, h);
+    }
+
+    private void mouseHandel(Stage stage){
+        exits.setOnMouseClicked(event -> {
+            System.out.println("e");
+            stage.close();
+        });
+        play_again.setOnMouseClicked(event -> {
+            System.out.println("pa");
+            level = 1;
+            newMap = true;
+            stillObjects.clear();
+            enemies.clear();
+            myBomber = null;
+            loadMap();
+            time = 0;
+            reload = true;
+        });
+    }
+    private void keyHandel(Stage stage, Bomber b){
+        stage.getScene().setOnKeyPressed(event -> b.handleKeyPressedEvent(event.getCode()));
+        stage.getScene().setOnKeyReleased(event -> b.handleKeyReleasedEvent(event.getCode()));
     }
 
     private void nextMap() {
         level++;
+        newMap = true;
+        time = 0;
         Sound.chuyen_man.play();
         Sound.chuyen_man.seek(Sound.chuyen_man.getStartTime());
         stillObjects.clear();
-        load();
+        loadMap();
     }
 
+    private Scene message(){
+        BackgroundFill backgroundFill = new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        Label lb = label("LEVEL " + level, (WIDTH * Sprite.SCALED_SIZE - 70) / 2,
+                (HEIGHT * Sprite.SCALED_SIZE - 70) / 2, 30);
+        /*label.setFont(new Font("System", 30));
+        label.setAlignment(Pos.CENTER);
+        label.setTextFill(Color.WHITE);
+        label.setLayoutX();
+        label.setLayoutY();*/
+        AnchorPane anchorPane = new AnchorPane(lb);
+        anchorPane.setBackground(background);
+        return new Scene(anchorPane,WIDTH * Sprite.SCALED_SIZE, HEIGHT * Sprite.SCALED_SIZE);
+    }
+
+    private Scene load(){
+        // Tao Canvas
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        gc = canvas.getGraphicsContext2D();
+        // Tao root container
+        Group root = new Group();
+        root.getChildren().add(canvas);
+        // Tao scene
+        return new Scene(root);
+
+    }
     private boolean checkNextMap() {
         if (enemies.size() == 0) {
             Rectangle r1 = myBomber.getBounds();
@@ -139,7 +255,7 @@ public class BombermanGame extends Application {
         myBomber.render(gc);
     }
 
-    public void load() {
+    public void loadMap() {
         try {
             scanner = new Scanner(new FileReader("res/levels/level" + level + ".txt"));
         } catch (FileNotFoundException e) {
@@ -220,7 +336,8 @@ public class BombermanGame extends Application {
                     if (r1.intersects(r2)) myBomber.stay();
                 } else {
                     Rectangle r3 = myBomber.getBounds();
-                    if (r3.intersects(r2)) myBomber.die();
+                    if (r3.intersects(r2))
+                        myBomber.die();
                 }
             }
         }

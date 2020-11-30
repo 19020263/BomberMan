@@ -88,6 +88,7 @@ public class Oneal extends Enemy {
             }
         } else {
             direction = random.nextInt(4);
+            setSpeed(1);
         }
     }
 

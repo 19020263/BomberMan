@@ -2,19 +2,20 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.Sound;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Bomber extends MovingEntity {
     private int bombRemain;
     private boolean placeBombCommand = false;
     private final List<Bomb> bombs = new ArrayList<>();
-
-    private KeyCode direction = null;
+    private boolean death;
+    private KeyCode direction;
 
     private int power;
 
@@ -22,31 +23,42 @@ public class Bomber extends MovingEntity {
         super( x, y, img);
         setLayer(1);
         setSpeed(2);
-        setBombRemain(2);
-        setPower(2);
+        setBombRemain(1);
+        setPower(1);
+        direction = null;
+        alive = true;
+        death = false;
     }
 
     @Override
     public void update() {
-        if (direction == KeyCode.LEFT) {
-            goLeft();
-            Sound.di_chuyen1.play();
-            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
-        }
-        if (direction == KeyCode.RIGHT) {
-            goRight();
-            Sound.di_chuyen1.play();
-            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
-        }
-        if (direction == KeyCode.UP) {
-            goUp();
-            Sound.di_chuyen1.play();
-            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
-        }
-        if (direction == KeyCode.DOWN) {
-            goDown();
-            Sound.di_chuyen1.play();
-            Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
+        if(isAlive()) {
+            if (direction == KeyCode.LEFT) {
+                goLeft();
+                Sound.di_chuyen1.play();
+                Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
+            }
+            if (direction == KeyCode.RIGHT) {
+                goRight();
+                Sound.di_chuyen1.play();
+                Sound.di_chuyen1.seek(Sound.di_chuyen1.getStartTime());
+            }
+            if (direction == KeyCode.UP) {
+                goUp();
+                Sound.di_chuyen2.play();
+                Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
+            }
+            if (direction == KeyCode.DOWN) {
+                goDown();
+                Sound.di_chuyen2.play();
+                Sound.di_chuyen2.seek(Sound.di_chuyen2.getStartTime());
+            }
+        }else if (animated < 30){
+            animated++;
+            img = Sprite.movingSprite(Sprite.player_dead1, Sprite.player_dead2
+                    , Sprite.player_dead3, animated, 30).getFxImage();
+        }else {
+            death = true;
         }
         if (placeBombCommand) {
             placeBomb();
@@ -56,44 +68,47 @@ public class Bomber extends MovingEntity {
             if (bomb.isExploded()) {
                 bombs.remove(i--);
                 bombRemain++;
-                Sound.bomb_explo.play();
-                Sound.bomb_explo.seek(Sound.bomb_explo.getStartTime());
             }
         }
     }
 
     public void handleKeyPressedEvent(KeyCode keyCode) {
-        if (keyCode == KeyCode.LEFT || keyCode == KeyCode.RIGHT
-                || keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
-            this.direction = keyCode;
-        }
-        if (keyCode == KeyCode.SPACE) {
-            if(bombRemain > 0) {
-                Sound.dat_bom.play();
-                Sound.dat_bom.seek(Sound.dat_bom.getStartTime());
+        if(isAlive()) {
+            if (keyCode == KeyCode.LEFT || keyCode == KeyCode.RIGHT
+                    || keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
+                this.direction = keyCode;
             }
-            placeBombCommand = true;
+            if (keyCode == KeyCode.SPACE) {
+                if (bombRemain > 0) {
+                    Sound.dat_bom.play();
+                    Sound.dat_bom.seek(Sound.dat_bom.getStartTime());
+                }
+                placeBombCommand = true;
+            }
         }
     }
 
     public void handleKeyReleasedEvent(KeyCode keyCode) {
-        if (direction == keyCode) {
-            if (direction == KeyCode.LEFT) {
-                img = Sprite.player_left.getFxImage();
+        if(isAlive()) {
+            if (direction == keyCode) {
+                if (direction == KeyCode.LEFT) {
+                    img = Sprite.player_left.getFxImage();
+                }
+                if (direction == KeyCode.RIGHT) {
+                    img = Sprite.player_right.getFxImage();
+                }
+                if (direction == KeyCode.UP) {
+                    System.out.println("yes");
+                    img = Sprite.player_up.getFxImage();
+                }
+                if (direction == KeyCode.DOWN) {
+                    img = Sprite.player_down.getFxImage();
+                }
+                direction = null;
             }
-            if (direction == KeyCode.RIGHT) {
-                img = Sprite.player_right.getFxImage();
+            if (keyCode == KeyCode.SPACE) {
+                placeBombCommand = false;
             }
-            if (direction == KeyCode.UP) {
-                img = Sprite.player_up.getFxImage();
-            }
-            if (direction == KeyCode.DOWN) {
-                img = Sprite.player_down.getFxImage();
-            }
-            direction = null;
-        }
-        if (keyCode == KeyCode.SPACE) {
-            placeBombCommand = false;
         }
     }
 
@@ -146,6 +161,9 @@ public class Bomber extends MovingEntity {
         return alive;
     }
 
+    public boolean isDeath(){
+        return death;
+    }
     public void die() {
         Sound.chet.play();
         Sound.chet.seek(Sound.chet.getStartTime());

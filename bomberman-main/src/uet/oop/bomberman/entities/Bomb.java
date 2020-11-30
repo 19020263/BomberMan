@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.awt.*;
@@ -36,6 +37,8 @@ public class Bomb extends MovingEntity {
             img = Sprite.movingSprite(Sprite.bomb, Sprite.bomb_1, Sprite.bomb_2, timeCounter, 60).getFxImage();
             if (timeCounter++ == 120) {
                 alive = false;
+                Sound.bomb_explo.play();
+                Sound.bomb_explo.seek(Sound.bomb_explo.getStartTime());
             }
         } else  {
             for (int i = flames.size() - 1; i >= 0; i--) {
